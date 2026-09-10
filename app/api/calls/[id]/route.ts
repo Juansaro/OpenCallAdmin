@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { enqueueCrmEvent } from "@/lib/crm";
 import { nowIso } from "@/lib/ids";
 import { getStore, updateStore } from "@/lib/store";
 import type { Call } from "@/lib/types";
@@ -49,6 +50,31 @@ export async function PATCH(request: Request, { params }: Params) {
       current.ticketId = body.ticketId ?? current.ticketId;
       current.wrapUp = body.wrapUp ?? current.wrapUp;
       if (agent) agent.status = "disponible";
+      const ticket = store.tickets.find((t) => t.id === current.ticketId);
+      if (ticket && current.wrapUp) {
+        const actor = agent?.name ?? "Agente";
+        ticket.events.unshift({
+          at: nowIso(),
+          actor,
+          type: current.wrapUp.disposition === "escalado" ? "escalado" : "proactivo",
+          message: `Cierre de llamada: ${current.wrapUp.summary || current.wrapUp.disposition}. Acciones: ${current.wrapUp.proactiveActions.join(", ") || "ninguna"}.`,
+        });
+        if (
+          current.wrapUp.disposition === "resuelto_l2" ||
+          current.wrapUp.disposition === "consulta_cerrada"
+        ) {
+          ticket.status = "resuelto";
+          ticket.resolvedAt = nowIso();
+          ticket.events.unshift({
+            at: nowIso(),
+            actor,
+            type: "resuelto",
+            message: "Cerrado en el wrap-up de la llamada L2.",
+          });
+          enqueueCrmEvent(store, "ticket.resolved", ticket);
+        }
+        ticket.updatedAt = nowIso();
+      }
     }
     return current;
   });
