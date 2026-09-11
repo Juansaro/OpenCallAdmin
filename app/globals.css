@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f3eee4;
+  --ink: #1c1915;
+  --muted: #6d645b;
+  --line: #ddd2c3;
+  --panel: #fffaf3;
+  --sidebar: #14201c;
+  --live: #d4652f;
+  --ok: #2b7a55;
+  --warn: #b8862a;
+  --info: #2b5f6b;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-panel: var(--panel);
+  --color-sidebar: var(--sidebar);
+  --color-live: var(--live);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-info: var(--info);
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-fraunces);
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  background-image:
+    radial-gradient(rgba(28, 25, 21, 0.045) 0.7px, transparent 0.7px);
+  background-size: 14px 12px;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 0 rgba(28, 25, 21, 0.04);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--live);
+  box-shadow: 0 0 0 0 rgba(212, 101, 47, 0.7);
+  animation: pulse-live 1.6s infinite;
+}
+
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
+}
+
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
+}
+
+@keyframes pulse-live {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 101, 47, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(212, 101, 47, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 101, 47, 0);
+  }
+}
